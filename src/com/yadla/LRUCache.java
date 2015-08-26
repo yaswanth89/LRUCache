@@ -34,7 +34,7 @@ public class LRUCache<K,V> implements Cache<K,V> {
             if(count.incrementAndGet() > capacity){
                 do{
                     removeAtTail();
-                }while (count.get() > capacity);
+                }while (count.decrementAndGet() > capacity);
             }
         }
         else{
@@ -60,7 +60,9 @@ public class LRUCache<K,V> implements Cache<K,V> {
                         this.tail = this.tail.pre;
                     }
                     //remove from linked list
-                    currentNode.pre.next = currentNode.next;
+                    if(currentNode.pre != null){
+                        currentNode.pre.next = currentNode.next;
+                    }
                     if(currentNode.next != null){
                         currentNode.next.pre = currentNode.pre;
                     }
@@ -77,11 +79,13 @@ public class LRUCache<K,V> implements Cache<K,V> {
     }
 
     private synchronized void removeAtTail(){
-        if(this.tail != this.head){
+        try {
             this.map.remove(this.tail.entry.getKey());
             this.tail.pre.next = null;
             this.tail = this.tail.pre;
-            count.decrementAndGet();
+        }
+        catch (Exception e){
+            //
         }
     }
 

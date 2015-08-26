@@ -20,7 +20,7 @@ public class LRUCacheTest extends TestCase {
 
     // test method to add two values
     public void testSimple(){
-        final int number=300;
+        final int number=100000;
         ExecutorService es = Executors.newCachedThreadPool();
         for(int i=0;i<50;i++){
             es.execute(new Runnable() {
@@ -45,4 +45,5 @@ public class LRUCacheTest extends TestCase {
             e.printStackTrace();
         }
     }
+    
 }
