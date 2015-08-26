@@ -45,5 +45,32 @@ public class LRUCacheTest extends TestCase {
             e.printStackTrace();
         }
     }
-    
+
+    public void testLRU(){
+        final int number=100000;
+        ExecutorService es = Executors.newCachedThreadPool();
+        for(int i=0;i<50;i++){
+            es.execute(new Runnable() {
+                public void run(){
+                    for(int j=0;j<number;j++){
+                        cache.put(j,j+10);
+                    }
+                }
+            });
+        }
+        es.shutdown();
+        try {
+            boolean finshed = es.awaitTermination(1, TimeUnit.MINUTES);
+            while(!finshed);
+            for(int i=0;i<25;i++) {
+                cache.put(i,i+10);
+            }
+            for(int i=0;i<25;i++) {
+                assertEquals(i+10,cache.get(i));
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
